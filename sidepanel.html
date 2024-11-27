@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Layout</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5; /* 更加柔和的背景色 */
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .toolbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #f8f9fa; /* 更轻的背景色 */
+      padding: 12px 0;
+      border-top: 1px solid #e9ecef; /* 更柔和的边框色 */
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .toolbar button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.4em;
+      color: #495057; /* 更深的按钮颜色 */
+      transition: color 0.3s, transform 0.3s;
+    }
+    .toolbar button:hover {
+      color: #007bff; /* 主题蓝色 */
+      transform: scale(1.1);
+    }
+    .toolbar button.active {
+      font-weight: bold;
+      color: #007bff; /* 主题蓝色 */
+    }
+
+    #main {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .glow-item {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef; /* 更柔和的边框色 */
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .glow-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .glow-text {
+        font-family: 'Georgia', serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        padding: 10px 15px;
+        background-color: #f9f9f9;
+        margin-bottom: 10px;
+        quotes: "\201C""\201D""\2018""\2019";
+    }
+
+    .glow-text::before {
+        content: open-quote;
+        font-size: 24px;
+        color: #007bff;
+        margin-right: 5px;
+    }
+
+    .glow-text::after {
+        content: close-quote;
+        font-size: 24px;
+        color: #007bff;
+        margin-left: 5px;
+    }
+    .glow-comment {
+      color: #333333;
+      padding: 10px 0;
+      margin-top: 15px;
+      position: relative;
+    }
+    .glow-comment::before {
+      content: "\f075"; /* Font Awesome comment icon */
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      font-size: 18px;
+      color: #007bff;
+      margin-right: 10px;
+    }
+    .glow-comment .quote-text {
+      font-size: 16px;
+      font-style: italic;
+      display: inline;
+    }
+
+    /* Remove unused styles */
+    .glow-comment .quotation-mark,
+    .glow-comment .blog-post-actions,
+    .glow-comment .blog-post-bottom,
+    .glow-comment .quote-badge {
+      display: none;
+    }
+
+    .no-highlights-message {
+      text-align: center;
+      padding: 40px 20px;
+      color: #4a4a4a;
+      font-size: 20px;
+      font-weight: 500;
+      font-family: 'Quicksand', sans-serif;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      margin: 20px auto;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .no-highlights-message::before {
+      content: '\f118'; /* Font Awesome regular smile face icon */
+      font-family: "Font Awesome 5 Free";
+      font-weight: 400;
+      font-size: 48px;
+      color: #FFD700; /* Gold color for the smile */
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .glow-item {
+    position: relative;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+    background-color: #ff4d4d; /* 红色背景 */
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: white; /* 白色文字 */
+    width: 24px; /* 固定宽度 */
+    height: 24px; /* 固定高度 */
+    border-radius: 50%; /* 圆形 */
+    line-height: 24px; /* 垂直居中文字 */
+    text-align: center; /* 水平居中文字 */
+    padding: 0; /* 移除内边距 */
+}
+
+.glow-item:hover .delete-btn {
+    display: block;
+}
+
+.delete-btn:hover {
+    background-color: #ff1a1a; /* 鼠标悬停时加深红色 */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.button-group button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.button-group button i {
+    font-size: 16px;
+}
+
+.clear-btn {
+    background-color: #dc3545;
+}
+
+.hide-btn {
+    background-color: #6c757d;
+}
+
+.copy-btn {
+    background-color: #28a745;
+}
+
+.button-group button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+  </style>
+</head>
+<body>
+  <div id="main">
+    <div class="highlights-container">
+      <!-- Content for highlights -->
+    </div>
+  <div class="button-group">
+    <button class="clear-btn"><i class="fas fa-trash-alt"></i>Clear</button>
+    <button class="hide-btn"><i class="fas fa-eye-slash"></i>Hide</button>
+    <button class="copy-btn"><i class="fas fa-copy"></i>Copy</button>
+  </div>
+  </div>
+
+  <script src="scripts/sidepanel.js"></script>
+</body>
+</html>

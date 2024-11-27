@@ -1,0 +1,53 @@
+{
+    "manifest_version": 3,
+    "name": "Glowify - Your Reading Assistant",
+    "version": "1.0",
+    "description": "Annotate, Explain, Lookup, Translate, and more with Glowify.",
+    "icons": {
+        "16": "images/icon-16.png",
+        "32": "images/icon-32.png",
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    },
+    "content_scripts": [
+    {
+      "js": ["scripts/llm.js", "scripts/str.js", "scripts/dom.js", "scripts/component.js", "scripts/content.js"],
+      "type": "module",
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "options_page": "options.html",
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },  
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "permissions": [
+    "activeTab", "scripting", "storage", "contextMenus", "identity", "sidePanel", "tts"
+  ],
+
+  "host_permissions": [
+    "https://api.notion.com/"
+  ],
+
+  "action": {
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "32": "images/icon-32.png",
+      "48": "images/icon-48.png",
+      "128": "images/icon-128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "css/font-awesome.all.min.css",
+        "webfonts/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ] 
+}

@@ -637,7 +637,12 @@ const App = {
 
     App.enable(true);
     
-    Options.load(() => loadGlows());
+    Options.load(() => {
+      // set a timer of 3 seconds and then call loadGlows
+      setTimeout(() => {
+        loadGlows();
+      }, 3000);
+    });
 
     chrome.runtime.sendMessage({
       action: 'BG_UPDATE_BADGE', 

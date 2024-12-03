@@ -407,6 +407,84 @@ function searchOccurrence(text, n) {
     }
   }
   
+  return crossSearchOccurrence(text, n);
+}
+
+function crossSearchOccurrence(text, n) {
+  // Replace all newlines in text using regex
+  const query = text.replace(/\n/g, "");
+  // OR using replaceAll
+  // const query = text.replaceAll("\n", "");
+  console.log(`[crossSearchOccurrence] query: ${query}`);
+  
+  let count = 0;
+  
+  // Get all text nodes in the document
+  const textNodes = [];
+  const walker = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    null,
+    false
+  );
+
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
+  }
+
+  // Sliding window over text nodes to find matches
+  for (let i = 0; i < textNodes.length; i++) {
+    let combinedText = '';
+    let nodeOffsets = [];
+    let currentIndex = 0;
+
+    // Build combined text from consecutive nodes
+    for (let j = i; j < textNodes.length; j++) {
+      const nodeText = textNodes[j].textContent;
+      combinedText += nodeText;
+      nodeOffsets.push({
+        node: textNodes[j],
+        start: currentIndex,
+        length: nodeText.length
+      });
+      currentIndex += nodeText.length;
+
+      // Check if we found a match
+      if (combinedText.includes(query)) {
+        count++;
+        if (count === n) {
+          const matchStart = combinedText.indexOf(query);
+          const matchEnd = matchStart + query.length;
+          
+          // Find start node and offset
+          let startNode, startOffset;
+          let endNode, endOffset;
+          
+          for (let k = 0; k < nodeOffsets.length; k++) {
+            const offset = nodeOffsets[k];
+            if (matchStart >= offset.start && matchStart < offset.start + offset.length) {
+              startNode = offset.node;
+              startOffset = matchStart - offset.start;
+            }
+            if (matchEnd > offset.start && matchEnd <= offset.start + offset.length) {
+              endNode = offset.node;
+              endOffset = matchEnd - offset.start;
+              break;
+            }
+          }
+
+          if (startNode && endNode) {
+            const range = document.createRange();
+            range.setStart(startNode, startOffset);
+            range.setEnd(endNode, endOffset);
+            return range;
+          }
+        }
+      }
+    }
+  }
+  
+  console.log(`[crossSearchOccurrence] Text not found: ${query}`);
   return null;
 }
 

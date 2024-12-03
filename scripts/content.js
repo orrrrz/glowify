@@ -128,6 +128,9 @@ function onExplain() {
     console.log(`[content.js] explain result: ${JSON.stringify(data)}`);
     saveComment(data.choices[0].message.content, glow);
   }); 
+
+  Toolbar.hide();
+  updateSidePanel();
 }
 
 function appendAudioLink(parent, text) {
@@ -145,8 +148,9 @@ function appendAudioLink(parent, text) {
   image.style.height = '1em';
   image.style.display = 'inline';
   image.style.verticalAlign = 'sub';
+  image.style.margin="0";
   link.appendChild(image);
-  parent.appendChild(link);
+  parent.insertBefore(image, parent.firstChild);
 }
 
 function appendAudioButton(parent, text) {
@@ -157,6 +161,7 @@ function appendAudioButton(parent, text) {
   image.style.height = '1em';
   image.style.display = 'inline';
   image.style.verticalAlign = 'sub';
+  image.style.margin="0";
   image.className = "audio"
 
   parent.insertBefore(image, parent.firstChild);
@@ -224,6 +229,9 @@ function onWordLookup() {
       }
     }
   }); 
+
+  Toolbar.hide();
+  updateSidePanel();
 }
 
 function onTranslate() {
@@ -239,6 +247,9 @@ function onTranslate() {
     console.log(`[content.js] translate result: ${JSON.stringify(data)}`);
     saveComment(data.choices[0].message.content, glow);
   }); 
+
+  Toolbar.hide();
+  updateSidePanel();
 }
 
 function onSearch() {
@@ -279,31 +290,32 @@ function onComment() {
   
   let currentComment = "";
 
-  let highlightSpan = Toolbar.getHighlightSpan();
-  console.log(`comment btn clicked. highlightSpan: ${highlightSpan}`);
+  const {selected, highlighted, text, occurrence} = getCurrentText();
 
-  if (highlightSpan) {
+  if (!highlighted) {
+    glow = createGlow(text, occurrence);
+  } else {
+    glow = Toolbar.getHighlightSpan();
+
+    const commentContentSpan = Toolbar.getCommentContentSpan();
+    if (commentContentSpan) {
+      currentComment = commentContentSpan.textContent;
+      console.log(`currentComment: ${currentComment}`);
+    } 
+  }
+
+  if (glow) {
     const commentContentSpan = Toolbar.getCommentContentSpan();
     console.log(`commentContentSpan: ${commentContentSpan}`);
     if (commentContentSpan) {
       currentComment = commentContentSpan.textContent;
       console.log(`currentComment: ${currentComment}`);
     } 
-  } else {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      savedRange = selection.getRangeAt(0).cloneRange();
-      console.log(`highlight current selection first.`);
-      highlightSpan = highlightRange(savedRange);
-      savedRange = null;
-    } else {
-      console.log(`no highlight span and no selection, this should not happen.`);
-    }
-  }
+  } 
 
   CommentForm.create(currentComment, (comment) => {
-    saveComment(comment, highlightSpan);
-  }, highlightSpan.textContent);
+    saveComment(comment, glow);
+  }, glow.textContent);
   Toolbar.hide();
 }
 
@@ -420,6 +432,13 @@ function onMouseUp(event) {
 
   if (event.target.closest('#comment-form')) {
     console.log("skip mouseup in comment form.");
+    return;
+  }
+
+  // if current cursor is inside a code block, then return
+  if (event.target.closest('code') || event.target.closest('pre')) {
+    console.log("skip mouseup in code block.");
+    Toolbar.hide();
     return;
   }
 

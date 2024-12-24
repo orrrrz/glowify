@@ -150,7 +150,7 @@ function appendAudioLink(parent, text) {
   image.style.verticalAlign = 'sub';
   image.style.margin="0";
   link.appendChild(image);
-  parent.insertBefore(image, parent.firstChild);
+  parent.insertBefore(link, parent.firstChild);
 }
 
 function appendAudioButton(parent, text) {
@@ -222,6 +222,7 @@ function onWordLookup() {
         return;
       }
       const domain = window.location.hostname;
+      console.log(`[content.js] lookup domain: ${domain}`);
       if (domain === 'x.com' || domain === 'reddit.com') {
         appendAudioLink(commentSpan, text);
       } else {

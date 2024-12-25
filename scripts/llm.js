@@ -111,6 +111,7 @@ function explain(text, context, options, callback) {
 }
 
 async function coze_workflow(text, context, language, apiKey, workflowId,callback) {
+    console.log(`[llm.js] coze_workflow: ${text}, ${context}, ${language}, ${workflowId}`);
     const cozeResponse = await fetch('https://api.coze.cn/v1/workflow/run', {
         method: 'POST',
         headers: {

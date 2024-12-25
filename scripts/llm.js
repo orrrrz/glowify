@@ -9,6 +9,11 @@ const Vendors = {
     }
 }
 
+const CozeWorkflows = {
+    TRANSLATE: "7451957951755845658",
+    EXPLAIN: "7452151691367120907"
+}
+
 
 
 function complete(vendor, system_prompt, user_prompt, secret, callback) {
@@ -39,7 +44,7 @@ function complete(vendor, system_prompt, user_prompt, secret, callback) {
     .then(response => response.json())
     .then(data => {
         console.log(`[llm.js] complete result: ${JSON.stringify(data)}`);
-        callback(data);
+        callback(data.choices[0].message.content);
     })
     .catch((error) => {
         console.error(`[llm.js] complete error: ${error}`);
@@ -74,7 +79,11 @@ function translate(text, context, options, callback) {
     output: 人名，知名经济学家，代表作《经济学原理》
     `
     const user_prompt = `context:\n${context}\ninput: ${text}\noutput: `;
-    complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+    if (options.vendor === 'coze') {
+        coze_workflow(text, context, options.language, options.llmApiKey, CozeWorkflows.TRANSLATE, callback);
+    } else {
+        complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+    }
 }
 
 function explain(text, context, options, callback) {
@@ -89,13 +98,46 @@ function explain(text, context, options, callback) {
     `;
     const user_prompt = `context:\n${context}\nconcept: ${text}\noutput: `;
     console.log(`[llm.js] explain prompt: ${user_prompt}`);
-    complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+    if (options.vendor === 'coze') {
+        coze_workflow(text, context, options.language, options.llmApiKey, CozeWorkflows.EXPLAIN, callback);
+    } else {
+        complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+    }
+}
+
+async function coze_workflow(text, context, language, apiKey, workflowId,callback) {
+    const cozeResponse = await fetch('https://api.coze.cn/v1/workflow/run', {
+        method: 'POST',
+        headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            workflow_id: workflowId,
+            parameters: { 
+                content: text,
+                context: context,
+                language: language
+            }
+        })
+    });
+    const cozeData = await cozeResponse.json();
+    console.log(`[llm.js] coze data: ${JSON.stringify(cozeData)}`);
+    const data = cozeData.data;
+    // convert string to json
+    const jsonData = JSON.parse(data);
+    callback(jsonData.output);
 }
 
 function lookup(text, context, options, callback) {
     const system_prompt = `You are a translation expert proficient in both English and ${options.language}. Given the following word and its appearing context, please explain the word meaning in ${options.language}.`;
     const user_prompt = `context:\n${context}\ninput: ${text}\noutput: `;
     console.log(`[llm.js] lookup prompt: ${user_prompt}`);
-    complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+    if (options.vendor === 'coze') {
+        coze_workflow(text, context, options.language, options.llmApiKey, CozeWorkflows.TRANSLATE, callback);
+    } else {
+        complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+    }
 }
+
 

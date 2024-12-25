@@ -109,8 +109,8 @@ function onTranslate() {
   const context = glow.parentNode.textContent;
 
   translate(text, context, Options, (data) => {
-    console.log(`[content.js] translate result: ${JSON.stringify(data)}`);
-    saveComment(data.choices[0].message.content, glow);
+    console.log(`[content.js] translate result: ${data}`);
+    saveComment(data, glow);
   }); 
 
 }
@@ -125,8 +125,8 @@ function onExplain() {
   const context = glow.parentNode.textContent;
 
   explain(text, context, Options, (data) => {
-    console.log(`[content.js] explain result: ${JSON.stringify(data)}`);
-    saveComment(data.choices[0].message.content, glow);
+    console.log(`[content.js] explain result: ${data}`);
+    saveComment(data, glow);
   }); 
 
   Toolbar.hide();
@@ -214,8 +214,8 @@ function onWordLookup() {
   console.log(`[content.js] lookup text: ${text}, context: ${context}`);
 
   lookup(text, context, Options, (data) => {
-    console.log(`[content.js] lookup result: ${JSON.stringify(data)}`);
-    saveComment(data.choices[0].message.content, glow);
+    console.log(`[content.js] lookup result: ${data}`);
+    saveComment(data, glow);
     const commentSpan = Toolbar.getCommentSpan();
     if (commentSpan) {
       if (commentSpan.querySelector('.audio')) {
@@ -245,8 +245,8 @@ function onTranslate() {
   const context = glow.parentNode.textContent;
 
   translate(text, context, Options, (data) => {
-    console.log(`[content.js] translate result: ${JSON.stringify(data)}`);
-    saveComment(data.choices[0].message.content, glow);
+    console.log(`[content.js] translate result: ${data}`);
+    saveComment(data, glow);
   }); 
 
   Toolbar.hide();

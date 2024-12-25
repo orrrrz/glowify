@@ -14,7 +14,8 @@
       "js": ["scripts/llm.js", "scripts/str.js", "scripts/dom.js", "scripts/component.js", "scripts/content.js"],
       "type": "module",
       "matches": [
-        "<all_urls>"
+        "http://*/*",
+        "https://*/*"
       ]
     }
   ],
@@ -26,13 +27,15 @@
     "service_worker": "scripts/background.js"
   },
   "permissions": [
-    "activeTab", "scripting", "storage", "contextMenus", "sidePanel"
+    "activeTab",
+    "scripting",
+    "storage",
+    "contextMenus",
+    "sidePanel"
   ],
-
   "host_permissions": [
-    "https://api.notion.com/"
+    "https://api.notion.com/*"
   ],
-
   "action": {
     "default_icon": {
       "16": "images/icon-16.png",
@@ -47,7 +50,7 @@
         "css/font-awesome.all.min.css",
         "webfonts/*"
       ],
-      "matches": ["<all_urls>"]
+      "matches": ["http://*/*", "https://*/*"]
     }
   ] 
 }

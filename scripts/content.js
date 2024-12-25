@@ -10,7 +10,7 @@ const Options = {
   saveToNotion: false,
   notionApiKey: '',
   notionDatabaseId: '',
-  vendor: 'dashscope',
+  vendor: 'openai',
   llmApiKey: '',
   language: 'Chinese',
   load: function(cb) {
@@ -546,8 +546,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.action === 'BG_ACTION_CLICKED') {
 
     // console.log(`event: BG_ACTION_CLICKED`);
-    App.enable(!App.isEnabled())
-    sendResponse({success: true, isEnabled: isEnabled});
+    App.toggleEnable(); 
+    sendResponse({success: true, isEnabled: App.isEnabled()});
   } else if (message.action === 'BG_TOGGLE_HIGHLIGHTS') {
     // console.log(`event: BG_TOGGLE_HIGHLIGHTS, visible: ${message.visible}`);
     setVisibility(message.visible);
@@ -617,10 +617,54 @@ function loadGlows() {
   });
 }
 
+function getCurrentUrlHash() {
+  const url = window.location.href.split('?')[0];
+  return StrUtils.getUrlHash(url);
+}
+
+function setUrlEnabled(isEnabled) {
+  const urlHash = getCurrentUrlHash();
+  localStorage.setItem('glowify-enabled-' + urlHash, isEnabled);
+}
+
+function getUrlEnabled() {
+  const urlHash = getCurrentUrlHash();
+  return localStorage.getItem('glowify-enabled-' + urlHash) === 'true';
+}
+
+function setBadgeStatus(isEnabled) {
+  chrome.runtime.sendMessage({
+    action: 'BG_UPDATE_BADGE',
+    enabled: isEnabled
+  });
+}
+
+function delayLoadGlows() {
+  Options.load(() => {
+    setTimeout(() => {
+      loadGlows();
+    }, 3000);
+  });
+}
+
 const App = {
-  isEnabled: () => document.body.classList.contains('glowify'),
-  enable: isEnabled => isEnabled ? document.body.classList.add('glowify') : document.body.classList.remove('glowify'),
-  toggleEnable: () => App.enable(!App.isEnabled()), 
+  isEnabled: () => getUrlEnabled(),
+  enable: (isEnabled) => {
+    console.log(`[content.js] enable glowify: ${isEnabled}`);
+    if (isEnabled == getUrlEnabled()) {
+      return;
+    }
+    setUrlEnabled(isEnabled);
+    setBadgeStatus(isEnabled);
+
+    if (isEnabled) {
+      delayLoadGlows();
+      setVisibility(true);
+    } else {
+      setVisibility(false);
+    }
+  },
+  toggleEnable: () => App.enable(!App.isEnabled()),
   init: () => {
     // Create toolbar with all action buttons
     Toolbar.create([
@@ -635,20 +679,12 @@ const App = {
     ]);
 
     document.addEventListener('mouseup', onMouseUp);
-
-    App.enable(true);
     
-    Options.load(() => {
-      // set a timer of 3 seconds and then call loadGlows
-      setTimeout(() => {
-        loadGlows();
-      }, 3000);
-    });
+    if (App.isEnabled()) {
 
-    chrome.runtime.sendMessage({
-      action: 'BG_UPDATE_BADGE', 
-      enabled: true
-    });
+      setBadgeStatus(true);
+      delayLoadGlows();
+    }
   }
 };
 

@@ -394,13 +394,13 @@ function searchOccurrence(text, n) {
         range.setStart(currentNode, index);
         range.setEnd(currentNode, index + text.length);
         
-        console.log('[content.js] Range info:', {
-          startContainer: range.startContainer,
-          endContainer: range.endContainer,
-          startOffset: range.startOffset,
-          endOffset: range.endOffset,
-          text: range.toString()
-        });
+        // console.log('[content.js] Range info:', {
+        //   startContainer: range.startContainer,
+        //   endContainer: range.endContainer,
+        //   startOffset: range.startOffset,
+        //   endOffset: range.endOffset,
+        //   text: range.toString()
+        // });
         
         return range;
       }

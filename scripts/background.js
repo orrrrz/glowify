@@ -317,6 +317,10 @@ function isSidePanelOpen(tabId) {
     });
   }
 
+function setBadge(enabled) {
+    chrome.action.setBadgeText({ text: enabled ? "ON" : "" });
+}
+
 // chrome.sidePanel
 //   .setPanelBehavior({ openPanelOnActionClick: true })
 //   .catch((error) => console.error(error));
@@ -432,7 +436,7 @@ function isSidePanelOpen(tabId) {
         return true; 
     } else if (message.action === 'BG_UPDATE_BADGE') {
         console.log(`[background.js] message receive: BG_UPDATE_BADGE, enabled: ${message.enabled}`);
-        chrome.action.setBadgeText({ text: message.enabled ? "ON" : "" });
+        setBadge(message.enabled);
     } else if (message.action === 'FETCH_AUDIO') {
         fetch(message.url)
             .then(response => response.blob())
@@ -525,9 +529,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 // Add this new event listener for action button clicks
 chrome.action.onClicked.addListener((tab) => {
-    chrome.tabs.sendMessage(tab.id, {action: 'BG_ACTION_CLICKED'}, (response) => {
-        chrome.action.setBadgeText({ text: response.isEnabled ? "ON" : "" });
-    });
+    // send message to content.js to toggle enabled state.
+    chrome.tabs.sendMessage(tab.id, {action: 'BG_ACTION_CLICKED'});
 });
 
 

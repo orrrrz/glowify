@@ -30,7 +30,7 @@ function getUrlHash(url) {
     if (hashIndex !== -1) {
       url = url.substring(0, hashIndex);
     }
-    console.log(`[content.js] url: ${url}, hash: ${simpleHash(url)}`);
+    // console.log(`[content.js] url: ${url}, hash: ${simpleHash(url)}`);
     // Use a simple hash function instead of MD5
     return simpleHash(url);
   }

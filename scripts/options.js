@@ -103,9 +103,3 @@ chrome.storage.local.get([
   document.getElementById('language').value = data.language || 'chinese';
   document.getElementById('notion-settings').style.display = data.saveToNotion ? 'block' : 'none';
 });
-
-    // Add this to your existing JavaScript or in a new script tag
-document.getElementById('sponsor-button').addEventListener('click', function() {
-  // Replace 'YOUR_PAYMENT_URL' with the actual URL of your payment page
-  window.open('YOUR_PAYMENT_URL', '_blank');
-});

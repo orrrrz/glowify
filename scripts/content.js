@@ -37,12 +37,12 @@ function highlightRange(range) {
 function onCopy() {
   const selection = window.getSelection();
   // print all ranges in selection
-  console.log(`[content.js] selection ranges: ${selection.rangeCount}`);
+  // console.log(`[content.js] selection ranges: ${selection.rangeCount}`);
   if (Toolbar.getCurrentMode() === Mode.EDIT_MODE) {
     const highlightSpan = Toolbar.getHighlightSpan();
-    console.log(`[content.js] onCopy highlight text: ${highlightSpan.id}`);
+    // console.log(`[content.js] onCopy highlight text: ${highlightSpan.id}`);
     if (highlightSpan) {
-      console.log(`[content.js] onCopy highlight text: ${highlightSpan.textContent}`);
+      // console.log(`[content.js] onCopy highlight text: ${highlightSpan.textContent}`);
       navigator.clipboard.writeText(highlightSpan.textContent); 
     }
   } else {
@@ -63,7 +63,7 @@ function getCurrentOccurrence(range, text) {
 
 
 function createGlow(text, n) {
-  console.log(`[content.js] highlightOccurrence: ${text}, ${n}`);
+  // console.log(`[content.js] highlightOccurrence: ${text}, ${n}`);
   const range = searchOccurrence(text, n);
 
   const span = HighlightSpan.create(
@@ -75,7 +75,7 @@ function createGlow(text, n) {
   span.dataset.occurrence = n;
 
   Toolbar.setHighlightId(span.id);
-  console.log(`[content.js] highlighted range: ${range.toString()}, dataset: ${JSON.stringify(span.dataset)}`);  
+  // console.log(`[content.js] highlighted range: ${range.toString()}, dataset: ${JSON.stringify(span.dataset)}`);  
 
   onGlowChange("create", HighlightSpan.getData(span));
   return span;
@@ -109,7 +109,7 @@ function onTranslate() {
   const context = glow.parentNode.textContent;
 
   translate(text, context, Options, (data) => {
-    console.log(`[content.js] translate result: ${data}`);
+    // console.log(`[content.js] translate result: ${data}`);
     saveComment(data, glow);
   }); 
 
@@ -125,7 +125,7 @@ function onExplain() {
   const context = glow.parentNode.textContent;
 
   explain(text, context, Options, (data) => {
-    console.log(`[content.js] explain result: ${data}`);
+    // console.log(`[content.js] explain result: ${data}`);
     saveComment(data, glow);
   }); 
 
@@ -211,10 +211,10 @@ function onWordLookup() {
 
   const glow = Toolbar.getHighlightSpan();
   const context = glow.parentNode.textContent;
-  console.log(`[content.js] lookup text: ${text}, context: ${context}`);
+  // console.log(`[content.js] lookup text: ${text}, context: ${context}`);
 
   lookup(text, context, Options, (data) => {
-    console.log(`[content.js] lookup result: ${data}`);
+    // console.log(`[content.js] lookup result: ${data}`);
     saveComment(data, glow);
     const commentSpan = Toolbar.getCommentSpan();
     if (commentSpan) {
@@ -222,7 +222,7 @@ function onWordLookup() {
         return;
       }
       const domain = window.location.hostname;
-      console.log(`[content.js] lookup domain: ${domain}`);
+      // console.log(`[content.js] lookup domain: ${domain}`);
       if (domain === 'x.com' || domain === 'reddit.com') {
         appendAudioLink(commentSpan, text);
       } else {
@@ -245,7 +245,7 @@ function onTranslate() {
   const context = glow.parentNode.textContent;
 
   translate(text, context, Options, (data) => {
-    console.log(`[content.js] translate result: ${data}`);
+    // console.log(`[content.js] translate result: ${data}`);
     saveComment(data, glow);
   }); 
 
@@ -270,7 +270,7 @@ function onGlowChange(event, highlightInfo) {
 
   Object.assign(data, highlightInfo);
 
-  console.log(`action: CT_HIGHLIGHT_CHANGED, event: ${event}, data: ${JSON.stringify(data)}`);  
+  // console.log(`action: CT_HIGHLIGHT_CHANGED, event: ${event}, data: ${JSON.stringify(data)}`);  
 
   chrome.runtime.sendMessage({
     action: 'CT_HIGHLIGHT_CHANGED',
@@ -301,16 +301,16 @@ function onComment() {
     const commentContentSpan = Toolbar.getCommentContentSpan();
     if (commentContentSpan) {
       currentComment = commentContentSpan.textContent;
-      console.log(`currentComment: ${currentComment}`);
+      // console.log(`currentComment: ${currentComment}`);
     } 
   }
 
   if (glow) {
     const commentContentSpan = Toolbar.getCommentContentSpan();
-    console.log(`commentContentSpan: ${commentContentSpan}`);
+    // console.log(`commentContentSpan: ${commentContentSpan}`);
     if (commentContentSpan) {
       currentComment = commentContentSpan.textContent;
-      console.log(`currentComment: ${currentComment}`);
+      // console.log(`currentComment: ${currentComment}`);
     } 
   } 
 
@@ -322,7 +322,7 @@ function onComment() {
 
 // 保存评论
 function saveComment(comment, glow) {
-  console.log(`saving comment: ${comment}, highlightSpan: ${glow.textContent}`);
+  // console.log(`saving comment: ${comment}, highlightSpan: ${glow.textContent}`);
 
   let commentSpan = Toolbar.getCommentSpan();
   if (comment === "") {
@@ -351,7 +351,7 @@ function saveComment(comment, glow) {
 function deleteGlow(glow) {
   if (glow) {
     const commentSpan = glow.nextElementSibling;
-    console.log(`deleteGlow commentSpan: ${commentSpan}`);
+    // console.log(`deleteGlow commentSpan: ${commentSpan}`);
 
     if (commentSpan && commentSpan.classList.contains("g-inline-comment")) {
       commentSpan.remove();
@@ -420,32 +420,32 @@ function isSelectionAcrossMultipleParagraphs(selection) {
 }
 
 function onMouseUp(event) {
-  console.log(`[content.js] onMouseUp, isEnabled: ${App.isEnabled()}`);
+  // console.log(`[content.js] onMouseUp, isEnabled: ${App.isEnabled()}`);
   if (!App.isEnabled()) {
-    console.log(`skip mouseup in disabled page: ${window.location.href}`);
+    // console.log(`skip mouseup in disabled page: ${window.location.href}`);
     return;
   } 
 
   if (event.target.closest('#selection-toolbar')) {
-    console.log("skip mouseup in toolbar.");
+    // console.log("skip mouseup in toolbar.");
     return;
   }
 
   if (event.target.closest('#comment-form')) {
-    console.log("skip mouseup in comment form.");
+    // console.log("skip mouseup in comment form.");
     return;
   }
 
   // if current cursor is inside a code block, then return
   if (event.target.closest('code') || event.target.closest('pre')) {
-    console.log("skip mouseup in code block.");
+    // console.log("skip mouseup in code block.");
     Toolbar.hide();
     return;
   }
 
   const selection = window.getSelection();
   if (selection.toString().length < Options.minTextLength) {
-    console.log(`skip mouse up with no selection or too small text. selection = ${selection.toString()}`);
+    // console.log(`skip mouse up with no selection or too small text. selection = ${selection.toString()}`);
     Toolbar.hide();
     return;
   }
@@ -458,20 +458,20 @@ function onMouseUp(event) {
     // If the parent elements are different, it spans multiple text nodes
     if (anchorParent !== focusParent) {
       // console.log("Selection spans multiple text nodes. Skipping.");
-      console.log(`selection spans multiple text nodes. selection: ${selection.toString()}, anchorNode: ${selection.anchorNode.outerHTML}, focusNode: ${selection.focusNode.outerHTML}`);
+      // console.log(`selection spans multiple text nodes. selection: ${selection.toString()}, anchorNode: ${selection.anchorNode.outerHTML}, focusNode: ${selection.focusNode.outerHTML}`);
       Toolbar.hide();
       return;
     }
   }
 
   if (selection.anchorNode.nodeType === Node.ELEMENT_NODE && selection.anchorNode.closest('#comment-form')) {
-    console.log("skip mouseup in comment form.");
+    // console.log("skip mouseup in comment form.");
     Toolbar.hide();
     return;
   }
 
   if (selection.focusNode.nodeType === Node.ELEMENT_NODE && selection.focusNode.closest('#comment-form')) {
-    console.log("skip mouseup in comment form.");
+    // console.log("skip mouseup in comment form.");
     Toolbar.hide();
     return;
   }
@@ -487,7 +487,7 @@ function onMouseUp(event) {
   const startNode = selection.anchorNode;
   const endNode = selection.focusNode;
   if (isSelectionAcrossMultipleParagraphs(selection)) {
-    console.log(`skip mouseup in multiple P nodes`);
+    // console.log(`skip mouseup in multiple P nodes`);
     Toolbar.hide();
     return;
   } 
@@ -522,11 +522,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
   } else if (message.action === 'BG_UPDATE_OPTIONS') {
 
-    console.log(`event: BG_UPDATE_OPTIONS, data: ${JSON.stringify(message)}`);
+    // console.log(`event: BG_UPDATE_OPTIONS, data: ${JSON.stringify(message)}`);
     Object.assign(Options, message.options);
   } else if (message.action === 'BG_DELETE_HIGHLIGHT') {
 
-    console.log(`event: BG_DELETE_HIGHLIGHT, data: id = ${message.id}`);
+    // console.log(`event: BG_DELETE_HIGHLIGHT, data: id = ${message.id}`);
     const highlightSpan = document.querySelector(`#${message.id}`);
     if (highlightSpan) {
       deleteGlow(highlightSpan);
@@ -545,11 +545,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     onHighlight();
   } else if (message.action === 'BG_ACTION_CLICKED') {
 
-    console.log(`event: BG_ACTION_CLICKED`);
+    // console.log(`event: BG_ACTION_CLICKED`);
     App.enable(!App.isEnabled())
     sendResponse({success: true, isEnabled: isEnabled});
   } else if (message.action === 'BG_TOGGLE_HIGHLIGHTS') {
-    console.log(`event: BG_TOGGLE_HIGHLIGHTS, visible: ${message.visible}`);
+    // console.log(`event: BG_TOGGLE_HIGHLIGHTS, visible: ${message.visible}`);
     setVisibility(message.visible);
   }
   return true;
@@ -585,15 +585,15 @@ function saveGlowsToLocal() {
 function loadGlowsFromLocal() {
   const urlHash = StrUtils.getUrlHash(window.location.href);
   const highlights = JSON.parse(localStorage.getItem('highlights-' + urlHash)) || [];
-  console.log(`[content.js] load highlights: ${JSON.stringify(highlights)}`);  
+  // console.log(`[content.js] load highlights: ${JSON.stringify(highlights)}`);  
   highlights.forEach(highlightData => {
       const highlightSpan = HighlightSpan.restore(highlightData, Options.highlightColor, Options.highlightBgColor);
-      console.log(`highlight restored: ${highlightSpan}, comment : ${highlightData.comment}`);
+      // console.log(`highlight restored: ${highlightSpan}, comment : ${highlightData.comment}`);
       if (highlightSpan && highlightData.comment && highlightData.comment !== "") {
         CommentSpan.create(highlightData.comment, highlightSpan);
     }
   });
-  console.log('All highlights loaded from local storage');
+  // console.log('All highlights loaded from local storage');
 }
 
 
@@ -604,11 +604,11 @@ function loadGlows() {
     action: 'CT_FETCH_HIGHLIGHTS',
     pageUrl: window.location.href
   }, (response) => {
-    console.log(`[content.js] message response: CT_FETCH_HIGHLIGHTS, data: ${JSON.stringify(response)}`);
+    // console.log(`[content.js] message response: CT_FETCH_HIGHLIGHTS, data: ${JSON.stringify(response)}`);
     if (response.success) {
       response.highlights.forEach(highlightData => {
         const highlightSpan = HighlightSpan.restore(highlightData, Options.highlightColor, Options.highlightBgColor);
-        console.log(`highlight restored: ${highlightSpan}, comment : ${highlightData.comment}`);
+        // console.log(`highlight restored: ${highlightSpan}, comment : ${highlightData.comment}`);
         if (highlightSpan && highlightData.comment && highlightData.comment !== "") {
           CommentSpan.create(highlightData.comment, highlightSpan);
         }
@@ -654,4 +654,4 @@ const App = {
 
 App.init();
 
-console.log('Content script loaded successfully');
+// console.log('Content script loaded successfully');

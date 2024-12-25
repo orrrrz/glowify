@@ -6,6 +6,10 @@ const Vendors = {
     moonshot: {
         url: 'https://api.moonshot.cn/v1/chat/completions',
         model: "moonshot-v1-8k"
+    },
+    openai: {
+        url: 'https://api.openai.com/v1/chat/completions',
+        model: "gpt-4o-mini"
     }
 }
 
@@ -21,6 +25,7 @@ function complete(vendor, system_prompt, user_prompt, secret, callback) {
     const url = Vendors[vendor].url;
     const payload = {
         model: Vendors[vendor].model,
+        store: true,
         messages: [
             {
                 role: "system",

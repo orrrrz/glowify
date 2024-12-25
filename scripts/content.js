@@ -684,6 +684,8 @@ const App = {
 
       setBadgeStatus(true);
       delayLoadGlows();
+    } else {
+      setBadgeStatus(false);
     }
   }
 };

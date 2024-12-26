@@ -47,6 +47,10 @@ document.querySelector('.save-button').addEventListener('click', function() {
   const vendor = document.getElementById('vendor').value;
   const llmApiKey = document.getElementById('llm-api-key').value;
   const language = document.getElementById('language').value;
+  const enabledUrls = document.getElementById('enabled-urls').value
+    .split('\n')
+    .map(url => url.trim())
+    .filter(url => url.length > 0);
   
   chrome.storage.local.set({ 
     highlightColor, 
@@ -57,7 +61,8 @@ document.querySelector('.save-button').addEventListener('click', function() {
     notionDatabaseId,
     vendor,
     llmApiKey,
-    language
+    language,
+    enabledUrls
   }, function() {
     console.log(`[options.js] Options saved.`);
     showMessageTip('Options saved successfully!', true);
@@ -90,7 +95,8 @@ chrome.storage.local.get([
   'notionDatabaseId',
   'vendor',
   'llmApiKey',
-  'language'
+  'language',
+  'enabledUrls'
 ], function(data) {
   document.getElementById('highlight-color').value = data.highlightColor || '#000000';
   document.getElementById('highlight-bg-color').value = data.highlightBgColor || '#ff0000';
@@ -102,4 +108,5 @@ chrome.storage.local.get([
   document.getElementById('llm-api-key').value = data.llmApiKey || '';
   document.getElementById('language').value = data.language || 'chinese';
   document.getElementById('notion-settings').style.display = data.saveToNotion ? 'block' : 'none';
+  document.getElementById('enabled-urls').value = (data.enabledUrls || []).join('\n');
 });

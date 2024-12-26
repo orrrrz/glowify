@@ -13,8 +13,9 @@ const Options = {
   vendor: 'openai',
   llmApiKey: '',
   language: 'Chinese',
+  enabledUrls: [],
   load: function(cb) {
-    chrome.storage.local.get(['highlightColor', 'highlightBgColor', 'minTextLength', 'autoSync', 'llmApiKey', 'vendor', 'language'], function(data) {
+    chrome.storage.local.get(['highlightColor', 'highlightBgColor', 'minTextLength', 'autoSync', 'llmApiKey', 'vendor', 'language', 'enabledUrls'], function(data) {
       Options.highlightColor = data.highlightColor || Options.highlightColor;
       Options.highlightBgColor = data.highlightBgColor || Options.highlightBgColor;
       Options.minTextLength = data.minTextLength || Options.minTextLength;
@@ -22,6 +23,7 @@ const Options = {
       Options.llmApiKey = data.llmApiKey || Options.llmApiKey;
       Options.vendor = data.vendor || Options.vendor;
       Options.language = data.language || Options.language;
+      Options.enabledUrls = data.enabledUrls || Options.enabledUrls;
       cb();
     }); 
   }
@@ -629,7 +631,19 @@ function setUrlEnabled(isEnabled) {
 
 function getUrlEnabled() {
   const urlHash = getCurrentUrlHash();
-  return localStorage.getItem('glowify-enabled-' + urlHash) === 'true';
+  if (localStorage.getItem('glowify-enabled-' + urlHash) === 'true') {
+    return true;
+  }
+
+  const url = window.location.href.split('?')[0];
+  // console.log(`[content.js] enabled urls: ${JSON.stringify(Options.enabledUrls)}, testing url: ${url}`);
+  return Options.enabledUrls.some(urlPattern => {
+    
+    const regex = new RegExp(urlPattern);
+    const result = regex.test(url);
+    // console.log(`testing url: ${url}, pattern: ${urlPattern}, result: ${result}`);
+    return result;
+  });
 }
 
 function setBadgeStatus(isEnabled) {
@@ -640,11 +654,10 @@ function setBadgeStatus(isEnabled) {
 }
 
 function delayLoadGlows() {
-  Options.load(() => {
-    setTimeout(() => {
-      loadGlows();
-    }, 3000);
-  });
+
+  setTimeout(() => {
+    loadGlows();
+  }, 3000);
 }
 
 const App = {
@@ -679,14 +692,16 @@ const App = {
     ]);
 
     document.addEventListener('mouseup', onMouseUp);
-    
-    if (App.isEnabled()) {
 
-      setBadgeStatus(true);
-      delayLoadGlows();
-    } else {
-      setBadgeStatus(false);
-    }
+    Options.load(() => {
+      if (App.isEnabled()) {
+
+        setBadgeStatus(true);
+        delayLoadGlows();
+      } else {
+        setBadgeStatus(false);
+      }
+    });
   }
 };
 

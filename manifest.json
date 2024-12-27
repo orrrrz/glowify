@@ -28,7 +28,6 @@
   },
   "permissions": [
     "activeTab",
-    "scripting",
     "storage",
     "contextMenus",
     "sidePanel"

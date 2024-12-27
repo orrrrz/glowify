@@ -19,7 +19,7 @@ function hideToolbarWithDelay() {
 }
 
 function createToolbar(btnConfigs) {
-    console.log('Creating toolbar');
+    // console.log('Creating toolbar');
     const toolbar = document.createElement('div');
     toolbar.id = 'selection-toolbar';
     toolbar.style.cssText = `
@@ -88,7 +88,7 @@ const Toolbar = {
 
       this.setCurrentMode(mode);
       if (this.isShowing()) {
-        console.log(`toolbar is already showing, skip show.`);
+        // console.log(`toolbar is already showing, skip show.`);
         return;
       }
   
@@ -138,12 +138,12 @@ const Toolbar = {
         // get the closest highlight span
         const highlightSpan = event.target.closest("." + Constants.HIGHLIGHT_CLASS);
         if (highlightSpan) {
-          console.log(`edit mode, set highlight id: ${highlightSpan.id}`); 
+          // console.log(`edit mode, set highlight id: ${highlightSpan.id}`); 
           this.setHighlightId(highlightSpan.id);
         }
 
       } else {
-        console.log(`norm mode, set highlight id: ""`); 
+        // console.log(`norm mode, set highlight id: ""`); 
         this.setHighlightId("");
       }
   },
@@ -171,19 +171,16 @@ const Toolbar = {
     getCommentSpan: function() {
       const highlightSpan = this.getHighlightSpan();
       if (!highlightSpan) {
-        console.log(`getCommentSpan: highlightSpan not found`);
+        // console.log(`getCommentSpan: highlightSpan not found`);
         return null;
       }
       const commentSpan = highlightSpan.nextElementSibling;
-      console.log(`getCommentSpan: commentSpan: ${commentSpan}`);
-      if (commentSpan && commentSpan.className === 'g-inline-comment') {
-        return commentSpan;
-      }
-      return null;
+      // console.log(`getCommentSpan: commentSpan: ${commentSpan}`);
+      return commentSpan && commentSpan.className === 'g-inline-comment' ? commentSpan : null;
     }, 
     getCommentContentSpan: function() {
       const commentSpan = this.getCommentSpan();
-      console.log(`commentSpan: ${commentSpan}`);
+      // console.log(`commentSpan: ${commentSpan}`);
       if (!commentSpan) {
         return null;
       }
@@ -216,7 +213,7 @@ const CommentForm = {
         commentForm.style.left = `${initialLeft}px`;
         commentForm.style.top = `${initialTop}px`;
 
-        console.log(`show comment form: ${defaultComment}`);
+        // console.log(`show comment form: ${defaultComment}`);
         commentForm.innerHTML = `
           <p style="
             margin-bottom: 10px;
@@ -415,7 +412,7 @@ function crossSearchOccurrence(text, n) {
   const query = text.replace(/\n/g, "");
   // OR using replaceAll
   // const query = text.replaceAll("\n", "");
-  console.log(`[crossSearchOccurrence] query: ${query}`);
+  // console.log(`[crossSearchOccurrence] query: ${query}`);
   
   let count = 0;
   
@@ -484,7 +481,7 @@ function crossSearchOccurrence(text, n) {
     }
   }
   
-  console.log(`[crossSearchOccurrence] Text not found: ${query}`);
+  // console.log(`[crossSearchOccurrence] Text not found: ${query}`);
   return null;
 }
 
@@ -510,7 +507,7 @@ const HighlightSpan = {
     const occurrence = parseInt(data.occurrence); // convert to int 
     const range = searchOccurrence(data.text, occurrence); 
     if (!range) {
-      console.log(`[HighlightSpan] restore: range not found for text: ${data.text}, occurrence: ${data.occurrence}`);
+      // console.log(`[HighlightSpan] restore: range not found for text: ${data.text}, occurrence: ${data.occurrence}`);
       return null;
     }
 
@@ -551,7 +548,7 @@ const HighlightSpan = {
     span.dataset.createdAt = StrUtils.getCurrentTs();
     span.dataset.updatedAt = StrUtils.getCurrentTs();
 
-    console.log(`add highlight: ${span.dataset.startOffset} - ${span.dataset.endOffset}, ${startXpath} - ${endXpath}`);
+    // console.log(`add highlight: ${span.dataset.startOffset} - ${span.dataset.endOffset}, ${startXpath} - ${endXpath}`);
 
     const fragment = range.extractContents();
     span.appendChild(fragment); // using surroundContents will report an error in certain cases.

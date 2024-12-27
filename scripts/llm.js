@@ -127,6 +127,7 @@ async function coze_workflow(text, context, language, apiKey, workflowId,callbac
             }
         })
     });
+    console.log(`[llm.js] coze response: ${JSON.stringify(cozeResponse)}`);
     const cozeData = await cozeResponse.json();
     console.log(`[llm.js] coze data: ${JSON.stringify(cozeData)}`);
     const data = cozeData.data;

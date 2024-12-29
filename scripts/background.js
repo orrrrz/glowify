@@ -1,10 +1,12 @@
 const Options = {
+    saveToNotion: false,
     notionApiKey: '',
     notionDatabaseId: ''
 }
 
 // read options from storage.
-chrome.storage.local.get(['notionApiKey', 'notionDatabaseId'], function(data) {
+chrome.storage.local.get(['saveToNotion', 'notionApiKey', 'notionDatabaseId'], function(data) {
+    Options.saveToNotion = data.saveToNotion;
     Options.notionApiKey = data.notionApiKey;
     Options.notionDatabaseId = data.notionDatabaseId;
 });
@@ -377,12 +379,17 @@ function setBadge(enabled) {
         return true;
     } else if (message.action === 'CT_HIGHLIGHT_CHANGED') {
         console.log(`action: CT_HIGHLIGHT_CHANGED, event: ${message.event}, data: ${JSON.stringify(message.data)}`);
-        if (message.event === "create") {
-            notion.addRecord(message.data);
-        } else if (message.event === "update") {
-            notion.updateRecord(message.data);
-        } else if (message.event === "delete") {
-            notion.deleteRecord(message.data);
+        // if saveToNotion is false, then do not save to notion.
+        if (Options.saveToNotion) {
+            if (message.event === "create") {
+                notion.addRecord(message.data);
+            } else if (message.event === "update") {
+                notion.updateRecord(message.data);
+            } else if (message.event === "delete") {
+                notion.deleteRecord(message.data);
+            }
+        } else {
+            console.log(`[background.js] saveToNotion is false, do not save to notion.`);
         }
     } else if (message.action === 'CT_FETCH_HIGHLIGHTS') {
         const filter = {
@@ -400,7 +407,7 @@ function setBadge(enabled) {
         });
     } else if (message.action === 'SP_UPDATE_OPTIONS') {
         console.log(`[background.js] message receive: SP_UPDATE_OPTIONS, data: ${JSON.stringify(message)}`);
-        
+        Options.saveToNotion = message.options.saveToNotion;
         Options.notionApiKey = message.options.notionApiKey;
         Options.notionDatabaseId = message.options.notionDatabaseId;
 

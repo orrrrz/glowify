@@ -604,7 +604,7 @@ function saveGlowsToLocal() {
   const highlights = getAllGlows();
   const urlHash = StrUtils.getUrlHash(window.location.href);
 
-  // console.log(`[content.js] highlights: ${JSON.stringify(highlights)}`);  
+  console.log(`[content.js] highlights: ${JSON.stringify(highlights)}`);  
   localStorage.setItem('highlights-' + urlHash, JSON.stringify(highlights));
 }
 
@@ -628,21 +628,27 @@ function loadGlowsFromLocal() {
 
 
 function loadGlows() {
-  chrome.runtime.sendMessage({
-    action: 'CT_FETCH_HIGHLIGHTS',
-    pageUrl: window.location.href
-  }, (response) => {
-    // console.log(`[content.js] message response: CT_FETCH_HIGHLIGHTS, data: ${JSON.stringify(response)}`);
-    if (response.success) {
-      response.highlights.forEach(highlightData => {
-        const highlightSpan = HighlightSpan.restore(highlightData, Options.highlightColor, Options.highlightBgColor);
-        // console.log(`highlight restored: ${highlightSpan}, comment : ${highlightData.comment}`);
-        if (highlightSpan && highlightData.comment && highlightData.comment !== "") {
-          CommentSpan.create(highlightData.comment, highlightSpan);
-        }
-      });
-    }
-  });
+  if (Options.saveToNotion) {
+    chrome.runtime.sendMessage({
+      action: 'CT_FETCH_HIGHLIGHTS',
+      pageUrl: window.location.href
+    }, (response) => {
+      // console.log(`[content.js] message response: CT_FETCH_HIGHLIGHTS, data: ${JSON.stringify(response)}`);
+      if (response.success) {
+        response.highlights.forEach(highlightData => {
+          const highlightSpan = HighlightSpan.restore(highlightData, Options.highlightColor, Options.highlightBgColor);
+          // console.log(`highlight restored: ${highlightSpan}, comment : ${highlightData.comment}`);
+          if (highlightSpan && highlightData.comment && highlightData.comment !== "") {
+            CommentSpan.create(highlightData.comment, highlightSpan);
+          }
+        });
+      }
+    });
+  } else {
+    // load from local storage.
+    console.log(`[content.js] load glows from local storage.`);
+    loadGlowsFromLocal();
+  }
 }
 
 function getCurrentUrlHash() {

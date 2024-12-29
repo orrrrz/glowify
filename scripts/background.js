@@ -408,7 +408,7 @@ function setBadge(enabled) {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
                 chrome.tabs.sendMessage(tabs[0].id, {action: 'BG_UPDATE_OPTIONS', options: message.options}, (response) => {
-                    console.log(`[background.js] message response: BG_UPDATE_OPTIONS, data: ${JSON.stringify(response)}`);
+                    console.log(`[background.js] message response: BG_UPDATE_OPTIONS, data: ${JSON.stringify(message.options)}`);
                 }); 
             }
         }); // end of tabs.query

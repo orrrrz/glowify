@@ -19,6 +19,7 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f8f9fa;
+      overflow-y: auto;
     }
 
     .options-container {
@@ -27,8 +28,28 @@
       max-width: 600px;
       width: 100%;
       box-sizing: border-box;
-      overflow-y: auto;
+      /* overflow-y: auto; */
       margin: 0 auto;
+      padding-right: 25px;
+    }
+
+    .options-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .options-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .options-container::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .options-container::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
     }
 
     .option-item {
@@ -251,6 +272,30 @@
       </div>
 
     </div>
+
+    <div class="option-group" id="prompt-settings">
+      <div class="option-item">
+        <label for="sys-prompt-translate">System Prompt for Translate</label>
+        <textarea id="sys-prompt-translate" name="sys-prompt-translate" class="styled-input" rows="5" 
+          placeholder="Enter your system prompt for translate here."></textarea>
+      </div>
+      <div class="option-item">
+        <label for="user-prompt-translate">User Prompt for Translate</label>
+        <textarea id="user-prompt-translate" name="user-prompt-translate" class="styled-input" rows="5" 
+          placeholder="Enter your user prompt for translate here."></textarea>
+      </div>
+      <div class="option-item">
+        <label for="sys-prompt-explain">System Prompt for Explain</label>
+        <textarea id="sys-prompt-explain" name="sys-prompt-explain" class="styled-input" rows="5" 
+          placeholder="Enter your system prompt for explain here."></textarea>
+      </div>
+      <div class="option-item">
+        <label for="user-prompt-explain">User Prompt for Explain</label>
+        <textarea id="user-prompt-explain" name="user-prompt-explain" class="styled-input" rows="5" 
+          placeholder="Enter your user prompt for explain here."></textarea>
+      </div>
+    </div>
+
     <div class="option-item">
       <div class="checkbox-label">
         <input type="checkbox" id="save-to-notion" name="save-to-notion">
@@ -270,6 +315,9 @@
         <input type="text" id="notion-database-id" name="notion-database-id" class="styled-input">
       </div>
     </div>
+
+    
+
     <button class="save-button">Save</button>
     <div id="message-tip" class="message-tip" style="display: none;"></div>
   </div>

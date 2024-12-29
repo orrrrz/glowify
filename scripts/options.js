@@ -51,6 +51,11 @@ document.querySelector('.save-button').addEventListener('click', function() {
     .split('\n')
     .map(url => url.trim())
     .filter(url => url.length > 0);
+
+  const sysPromptTranslate = document.getElementById('sys-prompt-translate').value;
+  const userPromptTranslate = document.getElementById('user-prompt-translate').value;
+  const sysPromptExplain = document.getElementById('sys-prompt-explain').value;
+  const userPromptExplain = document.getElementById('user-prompt-explain').value;
   
   chrome.storage.local.set({ 
     highlightColor, 
@@ -62,7 +67,11 @@ document.querySelector('.save-button').addEventListener('click', function() {
     vendor,
     llmApiKey,
     language,
-    enabledUrls
+    enabledUrls,
+    sysPromptTranslate,
+    userPromptTranslate,
+    sysPromptExplain,
+    userPromptExplain
   }, function() {
     console.log(`[options.js] Options saved.`);
     showMessageTip('Options saved successfully!', true);
@@ -80,7 +89,12 @@ document.querySelector('.save-button').addEventListener('click', function() {
       notionDatabaseId,
       vendor,
       llmApiKey,
-      language
+      language,
+      enabledUrls,
+      sysPromptTranslate,
+      userPromptTranslate,
+      sysPromptExplain,
+      userPromptExplain
     }
   });
 });
@@ -96,7 +110,11 @@ chrome.storage.local.get([
   'vendor',
   'llmApiKey',
   'language',
-  'enabledUrls'
+  'enabledUrls',
+  'sysPromptTranslate',
+  'userPromptTranslate',
+  'sysPromptExplain',
+  'userPromptExplain'
 ], function(data) {
   document.getElementById('highlight-color').value = data.highlightColor || '#000000';
   document.getElementById('highlight-bg-color').value = data.highlightBgColor || '#ff0000';
@@ -109,4 +127,8 @@ chrome.storage.local.get([
   document.getElementById('language').value = data.language || 'chinese';
   document.getElementById('notion-settings').style.display = data.saveToNotion ? 'block' : 'none';
   document.getElementById('enabled-urls').value = (data.enabledUrls || []).join('\n');
+  document.getElementById('sys-prompt-translate').value = data.sysPromptTranslate || '';
+  document.getElementById('user-prompt-translate').value = data.userPromptTranslate || '';
+  document.getElementById('sys-prompt-explain').value = data.sysPromptExplain || '';
+  document.getElementById('user-prompt-explain').value = data.userPromptExplain || '';
 });

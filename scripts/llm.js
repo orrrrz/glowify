@@ -19,7 +19,7 @@ const CozeWorkflows = {
 }
 
 
-const SystemPrompts = {
+const DefaultSystemPrompts = {
     forTranslate: function(language, verbose = false) {
         if (!verbose) {
             return `You are a world-famous translation expert proficient in both ${language} and English. Given an input and optionally its appearing context, please explain the input in ${language}.
@@ -81,7 +81,7 @@ const SystemPrompts = {
     }
 }
 
-const UserPrompts = {
+const DefaultUserPrompts = {
     forTranslate: function(text, context) {
         return `context:\n${context}\ninput: ${text}\noutput: `;
     },
@@ -91,20 +91,54 @@ const UserPrompts = {
 }
 
 
-function complete(vendor, system_prompt, user_prompt, secret, callback) {
+function complete(task, text, context, options, callback) {
+    // console.log(`[llm.js] complete: ${text}, ${context}, ${JSON.stringify(options)}`);
+    const url = Vendors[options.vendor].url;
+
+    let systemPrompt = "";
+    let userPrompt = "";
     
-    const url = Vendors[vendor].url;
+    if (task === 'translate') {
+
+        systemPrompt = DefaultSystemPrompts.forTranslate(options.language);
+        if (options.sysPromptTranslate && options.sysPromptTranslate.length > 0) {
+            systemPrompt = options.sysPromptTranslate.replace('{{language}}', options.language);
+            console.log(`[llm.js] use custom system prompt: ${systemPrompt}`);
+        } else {
+            console.log(`[llm.js] use default system prompt: ${systemPrompt}`);
+        }
+
+        userPrompt = DefaultUserPrompts.forTranslate(text, context);
+        if (options.userPromptTranslate && options.userPromptTranslate.length > 0) {
+            userPrompt = options.userPromptTranslate.replace('{{text}}', text).replace('{{context}}', context);
+        }
+    } else if (task === 'explain') {
+
+        systemPrompt = DefaultSystemPrompts.forExplain(options.language);
+        if (options.sysPromptExplain && options.sysPromptExplain.length > 0) {
+            systemPrompt = options.sysPromptExplain.replace('{{language}}', options.language);
+        }
+
+        userPrompt = DefaultUserPrompts.forExplain(text, context);
+        if (options.userPromptExplain && options.userPromptExplain.length > 0) {
+            userPrompt = options.userPromptExplain.replace('{{text}}', text).replace('{{context}}', context);
+        }
+    }
+
+    console.log(`[llm.js] systemPrompt: ${systemPrompt}`);
+    console.log(`[llm.js] userPrompt: ${userPrompt}`);
+
     const payload = {
-        model: Vendors[vendor].model,
+        model: Vendors[options.vendor].model,
         store: true,
         messages: [
             {
                 role: "system",
-                content: system_prompt
+                content: systemPrompt
             },
             {
                 role: "user",
-                content: user_prompt
+                content: userPrompt
             }
         ]
     };
@@ -112,7 +146,7 @@ function complete(vendor, system_prompt, user_prompt, secret, callback) {
     fetch(url, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${secret}`,
+            'Authorization': `Bearer ${options.llmApiKey}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
@@ -133,46 +167,26 @@ function complete(vendor, system_prompt, user_prompt, secret, callback) {
 
 function translate(text, context, options, callback) {
     if (options.vendor === 'coze') {
-        coze_workflow(text, context, options.language, options.llmApiKey, CozeWorkflows.TRANSLATE, callback);
+        coze_workflow(text, context, options, CozeWorkflows.TRANSLATE, callback);
     } else {
-        complete(options.vendor, 
-            SystemPrompts.forTranslate(options.language, verbose=false), 
-            UserPrompts.forTranslate(text, context), 
-            options.llmApiKey, 
-        callback);
+        complete("translate", text, context, options, callback);
     }
 }
 
 function explain(text, context, options, callback) {
-    const system_prompt = `You are a knowledgeable teacher, skilled in explaining any concept with precise and easily understandable language, while keeping the explanation simple and short. Given the context, please explain the meaning of the specified concept. Please always response in ${options.language}.
-    example:
-    context:
-        you actually have electron humor
-    concept:
-        electron humor
-    output:
-        一种以电子及其特性为主题的幽默，通常表现为科学笑话或双关语。这类幽默往往需要一定的科学知识，尤其是对原子和亚原子粒子的理解
-    `;
-    const user_prompt = `context:\n${context}\nconcept: ${text}\noutput: `;
-    console.log(`[llm.js] explain prompt: ${user_prompt}`);
     if (options.vendor === 'coze') {
-        coze_workflow(text, context, options.language, options.llmApiKey, CozeWorkflows.EXPLAIN, callback);
+        coze_workflow(text, context, options, CozeWorkflows.EXPLAIN, callback);
     } else {
-        complete(options.vendor, 
-            SystemPrompts.forExplain(options.language), 
-            UserPrompts.forExplain(text, context), 
-            options.llmApiKey, 
-            callback
-        );
+        complete("explain", text, context, options, callback);
     }
 }
 
-async function coze_workflow(text, context, language, apiKey, workflowId,callback) {
-    console.log(`[llm.js] coze_workflow: ${text}, ${context}, ${language}, ${workflowId}`);
+async function coze_workflow(text, context, options, workflowId,callback) {
+    console.log(`[llm.js] coze_workflow: ${text}, ${context}, ${options}, ${workflowId}`);
     const cozeResponse = await fetch('https://api.coze.cn/v1/workflow/run', {
         method: 'POST',
         headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${options.llmApiKey}`,
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -180,7 +194,7 @@ async function coze_workflow(text, context, language, apiKey, workflowId,callbac
             parameters: { 
                 content: text,
                 context: context,
-                language: language
+                language: options.language
             }
         })
     });
@@ -194,13 +208,10 @@ async function coze_workflow(text, context, language, apiKey, workflowId,callbac
 }
 
 function lookup(text, context, options, callback) {
-    const system_prompt = `You are a translation expert proficient in both English and ${options.language}. Given the following word and its appearing context, please explain the word meaning in ${options.language}.`;
-    const user_prompt = `context:\n${context}\ninput: ${text}\noutput: `;
-    console.log(`[llm.js] lookup prompt: ${user_prompt}`);
     if (options.vendor === 'coze') {
-        coze_workflow(text, context, options.language, options.llmApiKey, CozeWorkflows.TRANSLATE, callback);
+        coze_workflow(text, context, options, CozeWorkflows.TRANSLATE, callback);
     } else {
-        complete(options.vendor, system_prompt, user_prompt, options.llmApiKey, callback);
+        complete('translate', text, context, options, callback);
     }
 }
 

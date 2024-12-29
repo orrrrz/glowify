@@ -14,8 +14,12 @@ const Options = {
   llmApiKey: '',
   language: 'Chinese',
   enabledUrls: [],
+  sysPromptTranslate: '',
+  userPromptTranslate: '',
+  sysPromptExplain: '',
+  userPromptExplain: '',
   load: function(cb) {
-    chrome.storage.local.get(['highlightColor', 'highlightBgColor', 'minTextLength', 'autoSync', 'llmApiKey', 'vendor', 'language', 'enabledUrls'], function(data) {
+    chrome.storage.local.get(['highlightColor', 'highlightBgColor', 'minTextLength', 'autoSync', 'llmApiKey', 'vendor', 'language', 'enabledUrls', 'sysPromptTranslate', 'userPromptTranslate', 'sysPromptExplain', 'userPromptExplain'], function(data) {
       Options.highlightColor = data.highlightColor || Options.highlightColor;
       Options.highlightBgColor = data.highlightBgColor || Options.highlightBgColor;
       Options.minTextLength = data.minTextLength || Options.minTextLength;
@@ -24,6 +28,10 @@ const Options = {
       Options.vendor = data.vendor || Options.vendor;
       Options.language = data.language || Options.language;
       Options.enabledUrls = data.enabledUrls || Options.enabledUrls;
+      Options.sysPromptTranslate = data.sysPromptTranslate || Options.sysPromptTranslate;
+      Options.userPromptTranslate = data.userPromptTranslate || Options.userPromptTranslate;
+      Options.sysPromptExplain = data.sysPromptExplain || Options.sysPromptExplain;
+      Options.userPromptExplain = data.userPromptExplain || Options.userPromptExplain;
       cb();
     }); 
   }
@@ -526,6 +534,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     // console.log(`event: BG_UPDATE_OPTIONS, data: ${JSON.stringify(message)}`);
     Object.assign(Options, message.options);
+
   } else if (message.action === 'BG_DELETE_HIGHLIGHT') {
 
     // console.log(`event: BG_DELETE_HIGHLIGHT, data: id = ${message.id}`);

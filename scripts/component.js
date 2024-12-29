@@ -105,7 +105,7 @@ const Toolbar = {
     
         btnConfs = [
           {id: 'explainBtn', display: true },
-          {id: 'lookupBtn', display: true },
+          // {id: 'lookupBtn', display: true },
           {id: 'translateBtn', display: true },
           {id: 'highlightBtn', display: true },
           {id: 'commentBtn', display: true },
@@ -117,7 +117,7 @@ const Toolbar = {
     
         btnConfs = [
           {id: 'explainBtn', display: true },
-          {id: 'lookupBtn', display: true },
+          // {id: 'lookupBtn', display: true },
           {id: 'translateBtn', display: true },
           {id: 'highlightBtn', display: false },
           {id: 'commentBtn', display: true },

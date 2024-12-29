@@ -125,8 +125,8 @@ function complete(task, text, context, options, callback) {
         }
     }
 
-    console.log(`[llm.js] systemPrompt: ${systemPrompt}`);
-    console.log(`[llm.js] userPrompt: ${userPrompt}`);
+    // console.log(`[llm.js] systemPrompt: ${systemPrompt}`);
+    // console.log(`[llm.js] userPrompt: ${userPrompt}`);
 
     const payload = {
         model: Vendors[options.vendor].model,

@@ -257,6 +257,23 @@ function onTranslate() {
   translate(text, context, Options, (data) => {
     // console.log(`[content.js] translate result: ${data}`);
     saveComment(data, glow);
+
+    // if text is all english letters or space or dash, then append audio button.
+    if (text.match(/^[a-zA-Z\s-]+$/)) {
+      const commentSpan = Toolbar.getCommentSpan();
+      if (commentSpan) {
+        if (commentSpan.querySelector('.audio')) {
+          return;
+        }
+        const domain = window.location.hostname;
+        // console.log(`[content.js] lookup domain: ${domain}`);
+        if (domain === 'x.com' || domain === 'reddit.com') {
+          appendAudioLink(commentSpan, text);
+        } else {
+          appendAudioButton(commentSpan, text);
+        }
+      }
+    } // end of if
   }); 
 
   Toolbar.hide();
@@ -691,7 +708,7 @@ const App = {
     // Create toolbar with all action buttons
     Toolbar.create([
       {id: 'explainBtn', icon: 'question', onClick: onExplain, title: 'Explain' },
-      {id: 'lookupBtn', icon: 'search', onClick: onWordLookup, title: 'Word Lookup' },
+      // {id: 'lookupBtn', icon: 'search', onClick: onWordLookup, title: 'Word Lookup' },
       {id: 'translateBtn', icon: 'globe', onClick: onTranslate, title: 'Translate' },
       {id: 'highlightBtn', icon: 'highlighter', onClick: onHighlight, title: 'Highlight' },
       {id: 'commentBtn', icon: 'comment', onClick: onComment, title: 'Comment' },

@@ -72,6 +72,13 @@
     .option-item .checkbox-label label {
       margin-bottom: 0;
     }
+
+    .sub-label {
+      display: inline;
+      font-size: 0.8em;
+      color: #6c757d;
+      margin-left: 10px;
+    }
     .save-button {
       background-color: #007bff;
       color: #ffffff;
@@ -189,18 +196,17 @@
 <body>
   <div class="options-container">
     <h1>Glowify Options</h1>
-    
-    <div class="option-item">
-      <label for="highlight-bg-color">Highlight Background Color</label>
-      <div class="color-picker-wrapper">
-          <input type="color" id="highlight-bg-color" name="highlight-bg-color" value="#ffeb3b">
-        </div>
-    </div>
     <div class="option-item">
       <label for="highlight-color">Highlight Text Color</label>
       <div class="color-picker-wrapper">
         <input type="color" id="highlight-color" name="highlight-color" value="#000000">
       </div>
+    </div>
+    <div class="option-item">
+      <label for="highlight-bg-color">Highlight Background Color</label>
+      <div class="color-picker-wrapper">
+          <input type="color" id="highlight-bg-color" name="highlight-bg-color" value="#ffeb3b">
+        </div>
     </div>
     <div class="option-item">
       <label for="min-text-length">Minimum Text Length</label>
@@ -210,6 +216,40 @@
       <label for="enabled-urls">Enabled URLs (one per line)</label>
       <textarea id="enabled-urls" name="enabled-urls" class="styled-input" rows="5" 
         placeholder="Enter URL patterns, one per line&#10;Example:&#10;*.google.com/*&#10;https://github.com/*"></textarea>
+    </div>
+    <div class="option-group">
+      <div class="option-item">
+        <label for="vendor">LLM Provider</label>
+        <select id="vendor" name="vendor" class="styled-input">
+          <option value="openai">OpenAI</option>
+          <option value="dashscope">DashScope (阿里灵积)</option>
+          <option value="moonshot">Moonshot (月之暗面Kimi)</option>
+          <option value="coze">Coze (扣子) </option>
+        </select>
+      </div>
+      <div class="option-item">
+        <label for="llm-api-key">LLM API Key</label>
+        <div class="color-picker-wrapper">
+          <input type="password" id="llm-api-key" name="llm-api-key" class="styled-input">
+          <button type="button" for="llm-api-key" class="visibility-button">👁️</button>
+        </div>
+      </div>
+      <div class="option-item">
+        <label for="language">Target Language</label>
+        <select id="language" name="language" class="styled-input">
+          <option value="Chinese">Chinese</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Korean">Korean</option>
+          <option value="English">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+          <option value="German">German</option>
+          <option value="Italian">Italian</option>
+          <option value="Portuguese">Portuguese</option>
+          <option value="Russian">Russian</option>
+        </select>
+      </div>
+
     </div>
     <div class="option-item">
       <div class="checkbox-label">
@@ -228,39 +268,6 @@
       <div class="option-item">
         <label for="notion-database-id">Notion Database ID</label>
         <input type="text" id="notion-database-id" name="notion-database-id" class="styled-input">
-      </div>
-    </div>
-    <div class="option-group">
-      <div class="option-item">
-        <label for="vendor">Vendor</label>
-        <select id="vendor" name="vendor" class="styled-input">
-          <option value="openai">OpenAI</option>
-          <option value="dashscope">DashScope (阿里灵积)</option>
-          <option value="moonshot">Moonshot (月之暗面Kimi)</option>
-          <option value="coze">Coze (扣子) </option>
-        </select>
-      </div>
-      <div class="option-item">
-        <label for="language">Language</label>
-        <select id="language" name="language" class="styled-input">
-          <option value="Chinese">Chinese</option>
-          <option value="Japanese">Japanese</option>
-          <option value="Korean">Korean</option>
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-          <option value="Italian">Italian</option>
-          <option value="Portuguese">Portuguese</option>
-          <option value="Russian">Russian</option>
-        </select>
-      </div>
-      <div class="option-item">
-        <label for="llm-api-key">API Key</label>
-        <div class="color-picker-wrapper">
-          <input type="password" id="llm-api-key" name="llm-api-key" class="styled-input">
-          <button type="button" for="llm-api-key" class="visibility-button">👁️</button>
-        </div>
       </div>
     </div>
     <button class="save-button">Save</button>

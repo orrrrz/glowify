@@ -579,6 +579,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.action === 'BG_TOGGLE_HIGHLIGHTS') {
     // console.log(`event: BG_TOGGLE_HIGHLIGHTS, visible: ${message.visible}`);
     setVisibility(message.visible);
+  } else if (message.action === 'BG_REQUEST_ENABLED_STATUS') {
+    sendResponse({isEnabled: App.isEnabled()});
   }
   return true;
 });

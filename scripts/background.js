@@ -542,14 +542,20 @@ chrome.action.onClicked.addListener((tab) => {
 
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
-    // log activeInfo
-    console.log(`[background.js] chrome.tabs.onActivated, activeInfo: ${JSON.stringify(activeInfo)}`);
     const tabId = activeInfo.tabId;
+    
+    // Send message to the new tab
+    chrome.tabs.sendMessage(tabId, {action: 'BG_REQUEST_ENABLED_STATUS'}, (response) => {
+        // if response is not undefined, set badge.
+        if (response && response.isEnabled !== undefined) {
+            setBadge(response.isEnabled);
+        }
+    });
+
+    // Existing side panel handling code
     chrome.storage.local.get([`sidePanel_${tabId}`], (result) => {
         const isOpen = result[`sidePanel_${tabId}`] || false;
-
         console.log(`[background.js] chrome.tabs.onActivated, tabId: ${tabId}, isOpen: ${isOpen}`);  
-
         chrome.sidePanel.setOptions({ 
             tabId: tabId, 
             enabled: isOpen 

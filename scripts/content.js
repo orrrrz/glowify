@@ -280,12 +280,6 @@ function onTranslate() {
   updateSidePanel();
 }
 
-function onSearch() {
-  const {text} = getCurrentText();
-  const searchUrl = `https://www.google.com/search?q=${text}`;
-  window.open(searchUrl, '_blank');
-}
-
 function onGlowChange(event, highlightInfo) {
 
 
@@ -716,11 +710,9 @@ const App = {
     // Create toolbar with all action buttons
     Toolbar.create([
       {id: 'explainBtn', icon: 'question', onClick: onExplain, title: 'Explain' },
-      // {id: 'lookupBtn', icon: 'search', onClick: onWordLookup, title: 'Word Lookup' },
       {id: 'translateBtn', icon: 'globe', onClick: onTranslate, title: 'Translate' },
       {id: 'highlightBtn', icon: 'highlighter', onClick: onHighlight, title: 'Highlight' },
       {id: 'commentBtn', icon: 'comment', onClick: onComment, title: 'Comment' },
-      {id: 'searchBtn', icon: 'search', onClick: onSearch, title: 'Search' },
       {id: 'deleteBtn', icon: 'trash-alt', onClick: onDelete, title: 'Delete' },
       {id: 'copyBtn', icon: 'copy', onClick: onCopy, title: 'Copy' }
     ]);

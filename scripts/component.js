@@ -389,14 +389,6 @@ function searchOccurrence(text, n) {
         range.setStart(currentNode, index);
         range.setEnd(currentNode, index + text.length);
         
-        // console.log('[content.js] Range info:', {
-        //   startContainer: range.startContainer,
-        //   endContainer: range.endContainer,
-        //   startOffset: range.startOffset,
-        //   endOffset: range.endOffset,
-        //   text: range.toString()
-        // });
-        
         return range;
       }
     }
@@ -536,17 +528,10 @@ const HighlightSpan = {
     // span.style.display = 'inline-block';
     span.classList.add(Constants.HIGHLIGHT_CLASS);
 
-    const startXpath = DomUtils.getXPathForElement(range.startContainer);
-    const endXpath = DomUtils.getXPathForElement(range.endContainer);
 
-    span.dataset.startContainer = startXpath;
-    span.dataset.startOffset = range.startOffset;
-    span.dataset.endContainer = endXpath;
-    span.dataset.endOffset = range.endOffset;
     span.dataset.createdAt = StrUtils.getCurrentTs();
     span.dataset.updatedAt = StrUtils.getCurrentTs();
 
-    // console.log(`add highlight: ${span.dataset.startOffset} - ${span.dataset.endOffset}, ${startXpath} - ${endXpath}`);
 
     const fragment = range.extractContents();
     span.appendChild(fragment); // using surroundContents will report an error in certain cases.
@@ -570,11 +555,7 @@ const HighlightSpan = {
       id: span.id,
       comment: span.dataset.comment,
       createdAt: span.dataset.createdAt,
-      updatedAt: span.dataset.updatedAt,  
-      startContainer: span.dataset.startContainer,
-      startOffset: span.dataset.startOffset,
-      endContainer: span.dataset.endContainer,
-      endOffset: span.dataset.endOffset 
+      updatedAt: span.dataset.updatedAt
     }
   }
 }

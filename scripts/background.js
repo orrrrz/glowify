@@ -99,54 +99,6 @@ notion.addRecord = async function (data) {
                 type: "date",
                 date: { start: data.updatedAt }
             },
-            "startContainer": {
-                type: "rich_text",
-                rich_text: [
-                    {
-                        type: "text",
-                        text: {
-                            content: data.startContainer,
-                            link: null
-                        }
-                    }
-                ]
-            },
-            "startOffset": {
-                type: "rich_text",
-                rich_text: [
-                    {
-                        type: "text",
-                        text: {
-                            content: data.startOffset,
-                            link: null
-                        }
-                    }
-                ]
-            },
-            "endContainer": {
-                type: "rich_text",
-                rich_text: [
-                    {
-                        type: "text",
-                        text: {
-                            content: data.endContainer,
-                            link: null
-                        }
-                    }
-                ]
-            },
-            "endOffset": {
-                type: "rich_text",
-                rich_text: [
-                    {
-                        type: "text",
-                        text: {
-                            content: data.endOffset,
-                            link: null
-                        }
-                    }
-                ]
-            },
             "occurrence": {
                 type: "rich_text",
                 rich_text: [
@@ -259,7 +211,6 @@ notion.fetchRecords = async function (filter) {
             const highlightEntry = {};
             for (const property in entry.properties) {
                 const data = entry.properties[property];
-                // console.log(`[background.js] property: ${property}, value: ${data}`);
                 let value = "";
                 if (data.type === "rich_text") {
                     value = data.rich_text[0].text.content;

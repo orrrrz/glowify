@@ -19,7 +19,7 @@ const Options = {
   sysPromptExplain: '',
   userPromptExplain: '',
   load: function(cb) {
-    chrome.storage.local.get(['highlightColor', 'highlightBgColor', 'minTextLength', 'autoSync', 'llmApiKey', 'vendor', 'language', 'enabledUrls', 'sysPromptTranslate', 'userPromptTranslate', 'sysPromptExplain', 'userPromptExplain'], function(data) {
+    chrome.storage.local.get(['highlightColor', 'highlightBgColor', 'minTextLength', 'autoSync', 'llmApiKey', 'vendor', 'language', 'enabledUrls', 'sysPromptTranslate', 'userPromptTranslate', 'sysPromptExplain', 'userPromptExplain', 'saveToNotion'], function(data) {
       Options.highlightColor = data.highlightColor || Options.highlightColor;
       Options.highlightBgColor = data.highlightBgColor || Options.highlightBgColor;
       Options.minTextLength = data.minTextLength || Options.minTextLength;
@@ -32,6 +32,7 @@ const Options = {
       Options.userPromptTranslate = data.userPromptTranslate || Options.userPromptTranslate;
       Options.sysPromptExplain = data.sysPromptExplain || Options.sysPromptExplain;
       Options.userPromptExplain = data.userPromptExplain || Options.userPromptExplain;
+      Options.saveToNotion = data.saveToNotion || Options.saveToNotion;
       cb();
     }); 
   }

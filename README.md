@@ -60,10 +60,6 @@ You can also open the side panel from the context menu, where you can view all y
      - `comment` (Rich Text)
      - `created` (Date)
      - `updated` (Date)
-     - `startContainer` (Rich Text)
-     - `startOffset` (Rich Text)
-     - `endContainer` (Rich Text)
-     - `endOffset` (Rich Text)
      - `occurrence` (Rich Text)
    - **Option 2:** [Recommended] Clone the [Glowify Notion Database Template](https://www.notion.so/ce34483fe9d048a380d850d682fae25d?v=fff36e411feb814b8b80000c46bb500a).
 
@@ -142,10 +138,6 @@ Glowify 是一个 Chrome 扩展程序，通过注释、解释和翻译网页上�
      - `comment`（富文本）
      - `created`（日期）
      - `updated`（日期）
-     - `startContainer`（富文本）
-     - `startOffset`（富文本）
-     - `endContainer`（富文本）
-     - `endOffset`（富文本）
      - `occurrence`（富文本）
    - **选项 2：** [推荐] 克隆 [Glowify Notion 数据库模板](https://www.notion.so/ce34483fe9d048a380d850d682fae25d?v=fff36e411feb814b8b80000c46bb500a)。
 
@@ -224,10 +216,6 @@ Glowify が正しくインストールされると、ブラウザのツールバ
      - `comment`（リッチテキスト）
      - `created`（日付）
      - `updated`（日付）
-     - `startContainer`（リッチテキスト）
-     - `startOffset`（リッチテキスト）
-     - `endContainer`（リッチテキスト）
-     - `endOffset`（リッチテキスト）
      - `occurrence`（リッチテキスト）
    - **オプション 2：** [推奨] [Glowify Notion データベーステンプレート](https://www.notion.so/ce34483fe9d048a380d850d682fae25d?v=fff36e411feb814b8b80000c46bb500a) をクローンします。
 

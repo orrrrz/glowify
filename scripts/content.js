@@ -604,7 +604,7 @@ function saveGlowsToLocal() {
   const highlights = getAllGlows();
   const urlHash = StrUtils.getUrlHash(window.location.href);
 
-  console.log(`[content.js] highlights: ${JSON.stringify(highlights)}`);  
+  // console.log(`[content.js] highlights: ${JSON.stringify(highlights)}`);  
   localStorage.setItem('highlights-' + urlHash, JSON.stringify(highlights));
 }
 

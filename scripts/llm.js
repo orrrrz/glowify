@@ -10,6 +10,10 @@ const Vendors = {
     openai: {
         url: 'https://api.openai.com/v1/chat/completions',
         model: "gpt-4o-mini"
+    }, 
+    deepseek: {
+        url: 'https://api.deepseek.com/chat/completions',
+        model: "deepseek-chat"
     }
 }
 
@@ -103,9 +107,9 @@ function complete(task, text, context, options, callback) {
         systemPrompt = DefaultSystemPrompts.forTranslate(options.language);
         if (options.sysPromptTranslate && options.sysPromptTranslate.length > 0) {
             systemPrompt = options.sysPromptTranslate.replace('{{language}}', options.language);
-            console.log(`[llm.js] use custom system prompt: ${systemPrompt}`);
+            // console.log(`[llm.js] use custom system prompt: ${systemPrompt}`);
         } else {
-            console.log(`[llm.js] use default system prompt: ${systemPrompt}`);
+            // console.log(`[llm.js] use default system prompt: ${systemPrompt}`);
         }
 
         userPrompt = DefaultUserPrompts.forTranslate(text, context);
@@ -153,7 +157,7 @@ function complete(task, text, context, options, callback) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(`[llm.js] complete result: ${JSON.stringify(data)}`);
+        // console.log(`[llm.js] complete result: ${JSON.stringify(data)}`);
         callback(data.choices[0].message.content);
     })
     .catch((error) => {

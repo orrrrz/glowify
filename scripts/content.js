@@ -121,7 +121,11 @@ function onTranslate() {
 
   translate(text, context, Options, (data) => {
     // console.log(`[content.js] translate result: ${data}`);
-    saveComment(data, glow);
+    if (data.success) {
+      saveComment(data.data, glow);
+    } else {
+      saveComment("Failed to translate", glow);
+    }
   }); 
 
 }
@@ -137,7 +141,11 @@ function onExplain() {
 
   explain(text, context, Options, (data) => {
     // console.log(`[content.js] explain result: ${data}`);
-    saveComment(data, glow);
+    if (data.success) {
+      saveComment(data.data, glow);
+    } else {
+      saveComment("Failed to explain", glow);
+    }
   }); 
 
   Toolbar.hide();
@@ -226,7 +234,11 @@ function onWordLookup() {
 
   lookup(text, context, Options, (data) => {
     // console.log(`[content.js] lookup result: ${data}`);
-    saveComment(data, glow);
+    if (data.success) {
+      saveComment(data.data, glow);
+    } else {
+      saveComment("Failed to lookup", glow);
+    }
     const commentSpan = Toolbar.getCommentSpan();
     if (commentSpan) {
       if (commentSpan.querySelector('.audio')) {
@@ -257,7 +269,11 @@ function onTranslate() {
 
   translate(text, context, Options, (data) => {
     // console.log(`[content.js] translate result: ${data}`);
-    saveComment(data, glow);
+    if (data.success) {
+      saveComment(data.data, glow);
+    } else {
+      saveComment("Failed to translate", glow);
+    }
 
     // if text is all english letters or space or dash, then append audio button.
     if (text.match(/^[a-zA-Z\s-]+$/)) {

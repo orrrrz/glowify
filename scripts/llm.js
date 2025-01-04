@@ -158,7 +158,10 @@ function complete(task, text, context, options, callback) {
     .then(response => response.json())
     .then(data => {
         // console.log(`[llm.js] complete result: ${JSON.stringify(data)}`);
-        callback(data.choices[0].message.content);
+        callback({
+            "success": true,
+            "data": data.choices[0].message.content
+        });
     })
     .catch((error) => {
         console.error(`[llm.js] complete error: ${error}`);

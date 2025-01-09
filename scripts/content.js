@@ -77,6 +77,12 @@ function createGlow(text, n) {
   // console.log(`[content.js] highlightOccurrence: ${text}, ${n}`);
   const range = searchOccurrence(text, n);
 
+  // console.log(`[content.js] createGlow text: ${text}, n: ${n}, range: ${range}`);
+  if (!range) {
+    // console.log(`[content.js] createGlow range not found, text: ${text}, n: ${n}`);
+    return;
+  }
+
   const span = HighlightSpan.create(
     range, 
     Options.highlightColor, 
@@ -211,7 +217,11 @@ function getCurrentText() {
     };
   } 
   const range = selection.getRangeAt(0);
-  const text = selection.toString();
+
+  const fragment = range.cloneContents();
+  const text = fragment.textContent;
+  // const text = selection.toString();
+  // console.log(`[content.js] getCurrentText text: ${text} (${text.length}), range: ${range}`);
 
   const currentOccurrence = getCurrentOccurrence(range, text);
   return {

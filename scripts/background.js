@@ -457,6 +457,9 @@ chrome.runtime.onInstalled.addListener(() => {
             parentId: CONTEXT_MENU_CONFIG.MENU_GLOWIFY.id
         });
     });
+
+    // open options.html
+    chrome.runtime.openOptionsPage();
 });
 
 function openSidePanel(tabId) {

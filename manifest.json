@@ -47,7 +47,8 @@
     {
       "resources": [
         "css/font-awesome.all.min.css",
-        "webfonts/*"
+        "webfonts/*",
+        "images/*"
       ],
       "matches": ["http://*/*", "https://*/*"]
     }

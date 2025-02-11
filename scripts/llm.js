@@ -173,7 +173,7 @@ function complete(task, text, context, options, callback) {
         console.error(`[llm.js] complete error: ${error}`);
         callback({
             "success": false,
-            "message": error    
+            "message": error
         })
     });
 }

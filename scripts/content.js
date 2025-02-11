@@ -127,11 +127,7 @@ function onTranslate() {
 
   translate(text, context, Options, (data) => {
     // console.log(`[content.js] translate result: ${data}`);
-    if (data.success) {
-      saveComment(data.data, glow);
-    } else {
-      saveComment("Failed to translate", glow);
-    }
+    saveComment(data, glow);
   }); 
 
 }
@@ -167,13 +163,17 @@ function appendAudioLink(parent, text) {
   link.className = "audio"
 
   const image = document.createElement('img');
-  image.src = "https://cdn.icon-icons.com/icons2/3106/PNG/512/sound_speaker_audio_icon_191620.png";
-
-  image.style.width = '1em';
-  image.style.height = '1em';
-  image.style.display = 'inline';
-  image.style.verticalAlign = 'sub';
-  image.style.margin="0";
+  // use local image
+  image.src = chrome.runtime.getURL('images/speaker-2.png');
+  image.style.width = '0.9em';
+  image.style.height = '0.9em';
+  image.style.display = 'inline-block';
+  image.style.verticalAlign = 'middle';
+  image.style.margin = "0";
+  image.style.border = "none";
+  image.style.padding = "0";
+  image.style.boxSizing = "content-box";
+  image.className = "audio"
   link.appendChild(image);
   parent.insertBefore(link, parent.firstChild);
 }
@@ -181,12 +181,15 @@ function appendAudioLink(parent, text) {
 function appendAudioButton(parent, text) {
   // create a image button
   const image = document.createElement('img');
-  image.src = "https://cdn.icon-icons.com/icons2/3106/PNG/512/sound_speaker_audio_icon_191620.png";
-  image.style.width = '1em';
-  image.style.height = '1em';
-  image.style.display = 'inline';
-  image.style.verticalAlign = 'sub';
-  image.style.margin="0";
+  image.src = chrome.runtime.getURL('images/speaker-2.png');
+  image.style.width = '0.9em';
+  image.style.height = '0.9em';
+  image.style.display = 'inline-block';
+  image.style.verticalAlign = 'middle';
+  image.style.margin = "0";
+  image.style.border = "none";
+  image.style.padding = "0";
+  image.style.boxSizing = "content-box";
   image.className = "audio"
 
   parent.insertBefore(image, parent.firstChild);
@@ -282,7 +285,7 @@ function onTranslate() {
     if (data.success) {
       saveComment(data.data, glow);
     } else {
-      saveComment("Failed to translate", glow);
+      saveComment(`Failed to translate: ${data.message}`, glow);
     }
 
     // if text is all english letters or space or dash, then append audio button.

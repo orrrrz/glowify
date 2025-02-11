@@ -117,8 +117,8 @@ chrome.storage.local.get([
   'userPromptExplain'
 ], function(data) {
   document.getElementById('highlight-color').value = data.highlightColor || '#000000';
-  document.getElementById('highlight-bg-color').value = data.highlightBgColor || '#ff0000';
-  document.getElementById('min-text-length').value = data.minTextLength || 3;
+  document.getElementById('highlight-bg-color').value = data.highlightBgColor || '#f2d750';
+  document.getElementById('min-text-length').value = data.minTextLength || 2;
   document.getElementById('save-to-notion').checked = data.saveToNotion || false;
   document.getElementById('notion-api-key').value = data.notionApiKey || '';
   document.getElementById('notion-database-id').value = data.notionDatabaseId || '';

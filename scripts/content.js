@@ -146,7 +146,8 @@ function onExplain() {
     if (data.success) {
       saveComment(data.data, glow);
     } else {
-      saveComment("Failed to explain", glow);
+      const message = data.message || "Unknown";
+      saveComment(`Error: ${message}`, glow);
     }
   }); 
 
@@ -250,7 +251,8 @@ function onWordLookup() {
     if (data.success) {
       saveComment(data.data, glow);
     } else {
-      saveComment("Failed to lookup", glow);
+      const message = data.message || "Unknown";
+      saveComment(`Error: ${message}`, glow);
     }
     const commentSpan = Toolbar.getCommentSpan();
     if (commentSpan) {
@@ -285,7 +287,8 @@ function onTranslate() {
     if (data.success) {
       saveComment(data.data, glow);
     } else {
-      saveComment(`Failed to translate: ${data.message}`, glow);
+      const message = data.message || "Unknown";
+      saveComment(`Error: ${message}`, glow);
     }
 
     // if text is all english letters or space or dash, then append audio button.

@@ -161,20 +161,107 @@ function complete(task, text, context, options, callback) {
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json())
-    .then(data => {
-        // console.log(`[llm.js] complete result: ${JSON.stringify(data)}`);
-        callback({
-            "success": true,
-            "data": data.choices[0].message.content
+    // .then(response => response.json())
+    .then(response => {
+        
+        return response.json()
+        .then(data => {
+            console.log('2. Parsed JSON data:', data);
+            
+            if (!response.ok) {
+                console.log('3A. Response not OK, checking error format');
+                if (data.error && data.error.message) {
+                    console.log('4A. Found nested error message');
+                    callback({
+                        success: false,
+                        message: data.error.message 
+                    });
+                    return;
+                }
+                if (data.message) {
+                    console.log('4B. Found direct message');
+                    callback({
+                        success: false,
+                        message: data.message 
+                    });
+                    return;
+                }
+                console.log('4C. No structured error found, throwing status text');
+                throw new Error(response.statusText);
+            }
+            
+            console.log('3B. Response OK, returning data');
+            callback({
+                success: true,
+                data: data.choices[0].message.content
+            });
+            return;
         });
+
+
+        
     })
     .catch((error) => {
-        console.error(`[llm.js] complete error: ${error}`);
+        console.log('5. Entered catch block with error:', error);
+    
+        if (error.response) {
+            console.log('6A. Error has response property, trying to parse');
+            return error.response.json()
+            .then(errorData => {
+                console.log('7A. Parsed error response:', errorData);
+                if (errorData.error && errorData.error.message) {
+                    console.log('8A. Found nested error message in response');
+                    callback({
+                        success: false,
+                        message: errorData.error.message 
+                    });
+                    return;
+                }
+                if (errorData.message) {
+                    console.log('8B. Found direct message in response');
+                    callback({
+                        success: false,
+                        message: errorData.message 
+                    });
+                    return;
+                }
+                console.log('8C. No structured message found, using error.message');
+                callback({
+                    success: false,
+                    message: error.message || message
+                });
+                return;
+            })
+            .catch(e => {
+                console.log('7B. Failed to parse error response:', e);
+                callback({
+                    success: false,
+                    message: error.message || message
+                });
+                return;
+            });
+        }
+        
+        console.log('6B. Error has no response property, checking string/message');
+        if (typeof error === 'string') {
+            console.log('7C. Error is string');
+            callback({
+                success: false,
+                message: error
+            });
+        }
+        if (error.message) {
+            console.log('7D. Error has message property');
+            callback({
+                success: false,
+                message: error.message
+            });
+        }
+        console.log('7E. No error info found, returning empty string');
         callback({
-            "success": false,
-            "message": error
-        })
+            success: false,
+            message: ""
+        });
     });
 }
 
